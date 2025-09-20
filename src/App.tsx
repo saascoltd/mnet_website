@@ -8,6 +8,8 @@ import News from "./pages/News";
 import AppDownload from "./pages/AppDownload";
 import Contact from "./pages/Contact";
 import { CssBaseline, Box } from "@mui/material";
+import TermsAndConditions from "./pages/Terms&Condition";
+import FaqPage from "./pages/FAQ";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path='/news' element={<News />} />
             <Route path='/app-download' element={<AppDownload />} />
             <Route path='/contact' element={<Contact />} />
+            <Route path='/terms' element={<TermsAndConditions />} />
+            <Route path='/faqs' element={<FaqPage />} />
           </Routes>
         </Box>
         <Footer />

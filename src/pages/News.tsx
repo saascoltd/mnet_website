@@ -13,99 +13,27 @@ import {
   Tab,
   Pagination,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import type { AppDispatch } from "../store";
+import { getNews } from "../store/commonSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const newsData = [
-  {
-    id: 1,
-    title: "Company Achieves Major Milestone",
-    date: "2025-09-01",
-    image:
-      "https://media.istockphoto.com/id/1439932989/vector/project-to-progress-toward-business-goal-tiny-people-holding-pen-to-mark-milestones.jpg?s=612x612&w=0&k=20&c=pU25B1QCSH_unmhjinDdcnR8A5lUq_7jOiLvJSvaZFE=",
-    category: "News",
-    excerpt:
-      "We are proud to announce a major milestone in our growth journey...",
-  },
-  {
-    id: 2,
-    title: "Team Building Activity 2025",
-    date: "2025-08-20",
-    image:
-      "https://blogimage.vantagecircle.com/content/images/2020/08/Importance-of-team-building.png",
-    category: "Activity",
-    excerpt: "Our recent team building event brought together employees...",
-  },
-  {
-    id: 3,
-    title: "New Service Launch",
-    date: "2025-08-15",
-    image:
-      "https://media.istockphoto.com/id/1227391762/vector/launching-soon-marketing-store-template-coming-soon-announcement-flyer-banner.jpg?s=612x612&w=0&k=20&c=j79-q5oSc-zqqxXRGmaNyJoEW2e0-LuOSUKXx5l0-sY=",
-    category: "News",
-    excerpt:
-      "Introducing our latest service offering to serve our customers better...",
-  },
-  {
-    id: 4,
-    title: "Community Outreach Program",
-    date: "2025-07-28",
-    image:
-      "https://www.shutterstock.com/image-photo/community-news-shown-using-text-600nw-2503826623.jpg",
-    category: "Activity",
-    excerpt:
-      "Giving back to our community is at the heart of our company values...",
-  },
-  {
-    id: 5,
-    title: "Company Achieves Major Milestone",
-    date: "2025-09-01",
-    image:
-      "https://media.istockphoto.com/id/1439932989/vector/project-to-progress-toward-business-goal-tiny-people-holding-pen-to-mark-milestones.jpg?s=612x612&w=0&k=20&c=pU25B1QCSH_unmhjinDdcnR8A5lUq_7jOiLvJSvaZFE=",
-    category: "News",
-    excerpt:
-      "We are proud to announce a major milestone in our growth journey...",
-  },
-  {
-    id: 6,
-    title: "Team Building Activity 2025",
-    date: "2025-08-20",
-    image:
-      "https://blogimage.vantagecircle.com/content/images/2020/08/Importance-of-team-building.png",
-    category: "Activity",
-    excerpt: "Our recent team building event brought together employees...",
-  },
-  {
-    id: 7,
-    title: "New Service Launch",
-    date: "2025-08-15",
-    image:
-      "https://media.istockphoto.com/id/1227391762/vector/launching-soon-marketing-store-template-coming-soon-announcement-flyer-banner.jpg?s=612x612&w=0&k=20&c=j79-q5oSc-zqqxXRGmaNyJoEW2e0-LuOSUKXx5l0-sY=",
-    category: "News",
-    excerpt:
-      "Introducing our latest service offering to serve our customers better...",
-  },
-  {
-    id: 8,
-    title: "Community Outreach Program",
-    date: "2025-07-28",
-    image:
-      "https://www.shutterstock.com/image-photo/community-news-shown-using-text-600nw-2503826623.jpg",
-    category: "Activity",
-    excerpt:
-      "Giving back to our community is at the heart of our company values...",
-  },
-];
-
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 3;
 
 const News = () => {
-  const [filter, setFilter] = useState<"All" | "News" | "Activity">("All");
+  const dispatch = useDispatch<AppDispatch>();
+  const { news } = useSelector((state: any) => state.common);
+  const [filter, setFilter] = useState<"All" | "News" | "Activites">("All");
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(getNews({ page: 1, limit: 10 }));
+  }, [dispatch]);
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: "All" | "News" | "Activity"
+    newValue: "All" | "News" | "Activites"
   ) => {
     setFilter(newValue);
     setPage(1);
@@ -117,8 +45,8 @@ const News = () => {
 
   const filteredNews =
     filter === "All"
-      ? newsData
-      : newsData.filter((item) => item.category === filter);
+      ? news
+      : news.filter((item: any) => item.category === filter);
 
   const paginatedNews = filteredNews.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -160,7 +88,7 @@ const News = () => {
             indicatorColor='secondary'>
             <Tab label='All' value='All' />
             <Tab label='News' value='News' />
-            <Tab label='Activities' value='Activity' />
+            <Tab label='Activities' value='Activites' />
           </Tabs>
         </Box>
 
@@ -181,7 +109,9 @@ const News = () => {
               }}>
               <CardMedia
                 component='img'
-                image={paginatedNews[0].image}
+                image={`${import.meta.env.VITE_FILE_URL}/${
+                  paginatedNews[0].feature_image
+                }`}
                 alt={paginatedNews[0].title}
                 sx={{ width: { xs: "100%", md: "50%" }, height: 320 }}
               />
@@ -191,7 +121,12 @@ const News = () => {
                   color='primary'
                   sx={{ mb: 2 }}
                 />
-                <Typography variant='h4' fontWeight='bold' gutterBottom>
+                <Typography
+                  variant='h4'
+                  fontWeight='bold'
+                  gutterBottom
+                  className='line-clamp-3'
+                  sx={{ lineHeight: 1.6 }}>
                   {paginatedNews[0].title}
                 </Typography>
                 <Typography variant='body1' color='text.secondary' paragraph>
@@ -221,7 +156,7 @@ const News = () => {
 
         {/* Other News Grid */}
         <Grid container spacing={4}>
-          {paginatedNews.slice(1).map((item, index) => (
+          {paginatedNews.map((item: any, index: number) => (
             <Grid size={{ xs: 12, md: 4 }} key={item.id}>
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -238,7 +173,9 @@ const News = () => {
                   }}>
                   <CardMedia
                     component='img'
-                    image={item.image}
+                    image={`${import.meta.env.VITE_FILE_URL}/${
+                      item.feature_image
+                    }`}
                     alt={item.title}
                     sx={{ height: 200 }}
                   />
@@ -254,10 +191,14 @@ const News = () => {
                         size='small'
                       />
                       <Typography variant='caption' color='text.secondary'>
-                        {new Date(item.date).toLocaleDateString()}
+                        {new Date(item.publish_date).toLocaleDateString()}
                       </Typography>
                     </Stack>
-                    <Typography variant='h6' fontWeight='bold' gutterBottom>
+                    <Typography
+                      variant='h6'
+                      fontWeight='bold'
+                      gutterBottom
+                      className='line-clamp-2'>
                       {item.title}
                     </Typography>
                     <Typography

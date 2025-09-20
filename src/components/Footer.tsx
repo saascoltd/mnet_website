@@ -9,20 +9,32 @@ import {
 } from "@mui/material";
 import { Facebook, Twitter, LinkedIn, Instagram } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const links = [
     {
       title: "Company",
-      items: ["About Us", "Careers", "Partners", "Contact Us"],
+      items: [
+        { label: t("About Us"), url: "/about" },
+        { label: t("News"), url: "/news" },
+        { label: t("App Download"), url: "/app-download" },
+        { label: t("Contact Us"), url: "/contact" },
+      ],
     },
-    {
-      title: "Services",
-      items: ["Web Development", "Mobile Apps", "Cloud Solutions", "Marketing"],
-    },
+    // {
+    //   title: "Services",
+    //   items: ["Web Development", "Mobile Apps", "Cloud Solutions", "Marketing"],
+    // },
     {
       title: "Support",
-      items: ["Help Center", "FAQs", "Privacy Policy", "Terms of Service"],
+      items: [
+        { label: "FAQs", url: "/faqs" },
+        { label: "Terms of Service", url: "/terms" },
+        { label: "Privacy Policy", url: "/privacy" },
+      ],
     },
   ];
 
@@ -95,7 +107,7 @@ const Footer = () => {
 
           {/* Footer Links */}
           {links.map((section, index) => (
-            <Grid size={{ xs: 12, sm: 4, md: 2 }} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -109,19 +121,19 @@ const Footer = () => {
                   {section.title}
                 </Typography>
                 <Stack spacing={1}>
-                  {section.items.map((item, idx) => (
-                    <Typography
+                  {section.items.map((item: any, idx) => (
+                    <Link
                       key={idx}
-                      variant='body2'
-                      component='a'
-                      href='#'
-                      sx={{
-                        color: "white",
-                        textDecoration: "none",
-                        "&:hover": { color: "#f6af05" },
-                      }}>
-                      {item}
-                    </Typography>
+                      to={item.url}
+                      style={{ color: "white", textDecoration: "none" }}
+                      onMouseOver={(e) =>
+                        (e.currentTarget.style.color = "#f6af05")
+                      }
+                      onMouseOut={(e) =>
+                        (e.currentTarget.style.color = "white")
+                      }>
+                      {item.label}
+                    </Link>
                   ))}
                 </Stack>
               </motion.div>

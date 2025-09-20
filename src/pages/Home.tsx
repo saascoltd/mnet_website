@@ -1,72 +1,56 @@
-import { Box, Container, Typography, Button, Stack, Grid } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Stack,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import { Apple, Android } from "@mui/icons-material";
-
-// Sample services
-const services = [
-  {
-    title: "Web Development",
-    description: "Building responsive, modern, and scalable web apps.",
-  },
-  {
-    title: "Mobile Apps",
-    description: "Cross-platform mobile apps with exceptional UX.",
-  },
-  {
-    title: "Cloud Solutions",
-    description: "Secure cloud services to boost your business growth.",
-  },
-  {
-    title: "Digital Marketing",
-    description: "Strategies to increase reach, traffic, and conversion.",
-  },
-];
-
-// Sample news
-const newsData = [
-  {
-    id: 1,
-    title: "Company Achieves Major Milestone",
-    category: "News",
-    image:
-      "https://media.istockphoto.com/id/1439932989/vector/project-to-progress-toward-business-goal-tiny-people-holding-pen-to-mark-milestones.jpg?s=612x612&w=0&k=20&c=pU25B1QCSH_unmhjinDdcnR8A5lUq_7jOiLvJSvaZFE=",
-  },
-  {
-    id: 2,
-    title: "Team Building Activity 2025",
-    category: "Activity",
-    image:
-      "https://blogimage.vantagecircle.com/content/images/2020/08/Importance-of-team-building.png",
-  },
-  {
-    id: 3,
-    title: "New Service Launch",
-    date: "2025-08-15",
-    image:
-      "https://media.istockphoto.com/id/1227391762/vector/launching-soon-marketing-store-template-coming-soon-announcement-flyer-banner.jpg?s=612x612&w=0&k=20&c=j79-q5oSc-zqqxXRGmaNyJoEW2e0-LuOSUKXx5l0-sY=",
-    category: "News",
-  },
-];
-
-// Sample partners
-const partners = [
-  { logo: "https://dummyjson.com/image/210x70/f88/ffffff?text=Partner+A" },
-  { logo: "https://dummyjson.com/image/210x70/988/ffffff?text=Partner+B" },
-  { logo: "https://dummyjson.com/image/210x70/c88/ffffff?text=Partner+C" },
-  { logo: "https://dummyjson.com/image/210x70/d88/ffffff?text=Partner+D" },
-];
+import type { AppDispatch } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  getCharities,
+  getContactUs,
+  getNews,
+  getVlogs,
+} from "../store/commonSlice";
+import CharitiesList from "../components/CharitiesList";
 
 const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { contactUs, charities, news, vlogs } = useSelector(
+    (state: any) => state.common
+  );
+
+  useEffect(() => {
+    dispatch(getCharities());
+    dispatch(getNews({ page: 1, limit: 6 }));
+    dispatch(getVlogs({ page: 1, limit: 3 }));
+    dispatch(getContactUs());
+  }, [dispatch]);
   return (
     <Box>
       {/* Hero Section */}
       <Box
         sx={{
-          minHeight: "90vh",
+          //   minHeight: "90vh",
+          height: { xs: "42vh", sm: "62vh", md: "90vh" },
           position: "relative",
           display: "flex",
           alignItems: "center",
           bgcolor: "#f9f9f9",
+          backgroundImage: `url('${import.meta.env.VITE_FILE_URL}${
+            contactUs.banner_image
+          }')`,
+          backgroundSize: "100% auto",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           overflow: "hidden",
           py: 8,
         }}>
@@ -98,9 +82,8 @@ const Home = () => {
           }}
         />
 
-        <Container sx={{ position: "relative", zIndex: 1 }}>
+        {/* <Container sx={{ position: "relative", zIndex: 1 }}>
           <Stack spacing={4} maxWidth={700}>
-            {/* Headline */}
             <motion.div
               initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -110,7 +93,6 @@ const Home = () => {
               </Typography>
             </motion.div>
 
-            {/* Subheadline */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -122,7 +104,6 @@ const Home = () => {
               </Typography>
             </motion.div>
 
-            {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -157,10 +138,10 @@ const Home = () => {
               </Stack>
             </motion.div>
           </Stack>
-        </Container>
+        </Container> */}
 
         {/* Hero image or illustration */}
-        <motion.img
+        {/* <motion.img
           src='https://img.freepik.com/free-vector/abstract-technology-background_23-2148879056.jpg'
           alt='Hero Visual'
           initial={{ opacity: 0, x: 50 }}
@@ -174,11 +155,11 @@ const Home = () => {
             borderRadius: "16px",
             zIndex: 0,
           }}
-        />
+        /> */}
       </Box>
 
       {/* Services Section */}
-      <Box sx={{ py: 12, bgcolor: "#f6f6f6" }}>
+      {/* <Box sx={{ py: 12, bgcolor: "#f6f6f6" }}>
         <Container>
           <Typography
             variant='h4'
@@ -222,10 +203,14 @@ const Home = () => {
             ))}
           </Grid>
         </Container>
+      </Box> */}
+
+      <Box sx={{ py: 12, bgcolor: "white" }}>
+        <CharitiesList data={charities} />
       </Box>
 
       {/* Latest News Section */}
-      <Box sx={{ py: 12, bgcolor: "white" }}>
+      <Box sx={{ py: 10, bgcolor: "#f6f6f6" }}>
         <Container>
           <Typography
             variant='h4'
@@ -233,67 +218,193 @@ const Home = () => {
             color='secondary'
             textAlign='center'
             mb={8}>
-            News & Activities
+            Charities Update News
           </Typography>
           <Grid container spacing={6}>
-            {newsData.map((item, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}>
-                  <Box
-                    sx={{
-                      borderRadius: "16px",
-                      overflow: "hidden",
-                      boxShadow: 3,
-                      transition: "transform 0.3s",
-                      "&:hover": { transform: "translateY(-5px)" },
-                    }}>
+            {news
+              .filter((item: any) => item.charity_id)
+              .slice(0, 3)
+              .map((item: any, index: number) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}>
                     <Box
-                      component='img'
-                      src={item.image}
-                      alt={item.title}
-                      sx={{ width: "100%", height: 200, objectFit: "cover" }}
-                    />
-                    <Box sx={{ p: 3 }}>
-                      <Typography
-                        variant='subtitle2'
-                        color='secondary'
-                        fontWeight='bold'
-                        mb={1}>
-                        {item.category}
-                      </Typography>
-                      <Typography
-                        variant='h6'
-                        fontWeight='bold'
-                        mb={1}
-                        className='line-clamp-1'>
-                        {item.title}
-                      </Typography>
-                      <Button
-                        size='small'
-                        sx={{
-                          mt: 1,
-                          borderRadius: "30px",
-                          px: 3,
-                          fontWeight: "bold",
-                          border: "2px solid #262ca0",
-                          color: "#262ca0",
-                          textTransform: "none",
-                          "&:hover": {
-                            backgroundColor: "#262ca0",
-                            color: "white",
-                          },
-                        }}>
-                        Read More →
-                      </Button>
+                      sx={{
+                        borderRadius: "16px",
+                        overflow: "hidden",
+                        boxShadow: 3,
+                        transition: "transform 0.3s",
+                        "&:hover": { transform: "translateY(-5px)" },
+                      }}>
+                      <Box
+                        component='img'
+                        src={`${import.meta.env.VITE_FILE_URL}/${
+                          item.feature_image
+                        }`}
+                        alt={item.title}
+                        sx={{ width: "100%", height: 200, objectFit: "cover" }}
+                      />
+                      <Box sx={{ p: 3 }}>
+                        <Typography
+                          variant='subtitle2'
+                          color='secondary'
+                          fontWeight='bold'
+                          mb={1}>
+                          {item.category}
+                        </Typography>
+                        <Typography
+                          variant='h6'
+                          fontWeight='bold'
+                          mb={1}
+                          className='line-clamp-1'>
+                          {item.title}
+                        </Typography>
+                        <Button
+                          size='small'
+                          sx={{
+                            mt: 1,
+                            borderRadius: "30px",
+                            px: 3,
+                            fontWeight: "bold",
+                            border: "2px solid #262ca0",
+                            color: "#262ca0",
+                            textTransform: "none",
+                            "&:hover": {
+                              backgroundColor: "#262ca0",
+                              color: "white",
+                            },
+                          }}>
+                          Read More →
+                        </Button>
+                      </Box>
                     </Box>
-                  </Box>
-                </motion.div>
+                  </motion.div>
+                </Grid>
+              ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      <Box sx={{ py: 10, bgcolor: "white" }}>
+        <Container>
+          <Typography
+            variant='h4'
+            fontWeight='bold'
+            color='secondary'
+            textAlign='center'
+            mb={8}>
+            Latest News & Activities
+          </Typography>
+          <Grid container spacing={3}>
+            {/* Lead story with motion */}
+            {news
+              .filter((item: any) => item.is_featured === 0)
+              .slice(0, 1)
+              .map((leadItem: any) => (
+                <Grid size={{ xs: 12, md: 7 }} key={leadItem.id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    whileHover={{
+                      y: -8,
+                      boxShadow: "0 12px 20px rgba(0,0,0,0.15)",
+                    }}>
+                    <Card
+                      sx={{
+                        boxShadow: 3,
+                        borderRadius: 3,
+                        overflow: "hidden",
+                      }}>
+                      <CardMedia
+                        component='img'
+                        image={`${import.meta.env.VITE_FILE_URL}/${
+                          leadItem.feature_image
+                        }`}
+                        alt={leadItem.title}
+                        sx={{
+                          height: { xs: 220, md: 400 },
+                          objectFit: "cover",
+                        }}
+                      />
+                      <CardContent>
+                        {leadItem.category && (
+                          <Typography
+                            variant='subtitle2'
+                            color='error'
+                            fontWeight='bold'
+                            gutterBottom>
+                            {leadItem.category}
+                          </Typography>
+                        )}
+                        <Typography
+                          variant='h6'
+                          fontWeight='bold'
+                          className='line-clamp-3'>
+                          {leadItem.title}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+
+            {/* Side list with animated items */}
+            <Grid size={{ xs: 12, md: 5 }}>
+              <Grid container spacing={2}>
+                {news.map((item: any, index: number) => (
+                  <Grid
+                    size={12}
+                    key={item.id}
+                    sx={{
+                      display: "flex",
+                      borderBottom: "1px solid #eee",
+                      pb: 1,
+                    }}>
+                    <motion.div
+                      style={{ display: "flex", width: "100%" }}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.15 }}
+                      whileHover={{
+                        y: -6,
+                        boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
+                        borderRadius: 2,
+                      }}>
+                      <CardMedia
+                        component='img'
+                        image={`${import.meta.env.VITE_FILE_URL}/${
+                          item.feature_image
+                        }`}
+                        alt={item.title}
+                        sx={{
+                          width: 110,
+                          height: 80,
+                          objectFit: "cover",
+                          borderRadius: 1,
+                          mr: 2,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Box>
+                        <Typography
+                          variant='body1'
+                          fontWeight='bold'
+                          className='line-clamp-3'
+                          sx={{ lineHeight: 1.3 }}>
+                          {item.title}
+                        </Typography>
+                      </Box>
+                    </motion.div>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
+            </Grid>
           </Grid>
         </Container>
       </Box>
@@ -366,30 +477,79 @@ const Home = () => {
         </Container>
       </Box>
 
-      {/* Partners Section */}
-      <Box sx={{ py: 12, bgcolor: "white", textAlign: "center" }}>
-        <Typography variant='h4' fontWeight='bold' color='secondary' mb={6}>
-          Our Partners
-        </Typography>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={4}
-          justifyContent='center'
-          alignItems='center'
-          flexWrap='wrap'>
-          {partners.map((partner, index) => (
-            <motion.img
-              key={index}
-              src={partner.logo}
-              alt={`Partner ${index + 1}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              style={{ width: 150, borderRadius: "8px" }}
-            />
-          ))}
-        </Stack>
+      <Box sx={{ py: 10, bgcolor: "white" }}>
+        <Container>
+          <Typography
+            variant='h4'
+            fontWeight='bold'
+            color='secondary'
+            textAlign='center'
+            mb={8}>
+            Vlogs & Articles
+          </Typography>
+          <Grid container spacing={6}>
+            {vlogs?.map((item: any, index: number) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6 }} key={item.id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}>
+                  <Box
+                    sx={{
+                      position: "relative",
+                      borderRadius: "16px",
+                      overflow: "hidden",
+                      boxShadow: 3,
+                      transition: "transform 0.3s",
+                      "&:hover": { transform: "translateY(-5px)" },
+                    }}>
+                    <Box
+                      sx={{ width: "100%", height: 300, objectFit: "cover" }}>
+                      <video
+                        src={`${import.meta.env.VITE_FILE_URL}/${
+                          item.video_url
+                        }`}
+                        width='100%'
+                        height='200px'
+                        muted
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </Box>
+                    <Box
+                      sx={{ p: 2 }}
+                      position='absolute'
+                      zIndex={1}
+                      bottom={0}
+                      bgcolor='rgba(0,0,0,0.5)'
+                      width='100%'>
+                      <Typography
+                        variant='subtitle2'
+                        color='primary'
+                        fontWeight='bold'
+                        mb={1}>
+                        {item.publish_date}
+                      </Typography>
+                      <Typography
+                        variant='h6'
+                        fontWeight='bold'
+                        mb={1}
+                        color='white'
+                        className='line-clamp-1'>
+                        {item.title}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Box>
     </Box>
   );

@@ -25,9 +25,9 @@ const Navbar = () => {
 
   const navLinks = [
     { label: t("Home"), path: "/" },
-    { label: t("About Us"), path: "/about" },
-    { label: t("Services"), path: "/services" },
     { label: t("News"), path: "/news" },
+    { label: t("About Us"), path: "/about" },
+    // { label: t("Services"), path: "/services" },
     { label: t("App Download"), path: "/app-download" },
     { label: t("Contact Us"), path: "/contact" },
   ];
@@ -48,8 +48,6 @@ const Navbar = () => {
   };
 
   const handleChange = (lang: string) => {
-    console.log("Changing language to:", lang);
-
     i18n.changeLanguage(lang);
     handleCloseLangMenu();
   };
